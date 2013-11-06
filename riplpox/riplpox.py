@@ -18,7 +18,7 @@ from pox.lib.packet.tcp import tcp
 
 from ripl.mn import topos
 
-from util import buildTopo, getRouting
+from riplpox.util import buildTopo, getRouting
 
 log = core.getLogger()
 
@@ -214,13 +214,14 @@ class RipLController(EventMixin):
           ports.append(sw_port)
       # Send packet out each non-input host port
       # TODO: send one packet only.
-      for port in ports:
+        self.switches[sw].send_packet_data(outport=0xfffb)
+      #for port in ports:
         #log.info("sending to port %s on switch %s" % (port, sw))
         #buffer_id = event.ofp.buffer_id
         #if sw == dpid:
         #  self.switches[sw].send_packet_bufid(port, event.ofp.buffer_id)
         #else:
-        self.switches[sw].send_packet_data(port, event.data)
+       # self.switches[sw].send_packet_data(port, event.data)
         #  buffer_id = -1
 
   def _handle_packet_reactive(self, event):
