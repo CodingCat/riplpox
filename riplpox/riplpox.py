@@ -37,6 +37,7 @@ PRIO_HYBRID_VLAN_DOWN = 900
 PRIO_HYBRID_FLOW_UP = 500
 PRIO_HYBRID_VLAN_UP = 10
 
+NO_BUFFER = 4294967295
 
 # Borrowed from pox/forwarding/l2_multi
 class Switch (EventMixin):
@@ -72,13 +73,13 @@ class Switch (EventMixin):
     msg.actions.append(of.ofp_action_output(port = outport))
     self.connection.send(msg)
 
-  def send_packet_bufid(self, outport, buffer_id = -1):
+  def send_packet_bufid(self, outport, buffer_id = NO_BUFFER):
     msg = of.ofp_packet_out(in_port=of.OFPP_NONE)
     msg.actions.append(of.ofp_action_output(port = outport))
     msg.buffer_id = buffer_id
     self.connection.send(msg)
 
-  def install(self, port, match, buf = -1, idle_timeout = 0, hard_timeout = 0,
+  def install(self, port, match, buf = NO_BUFFER, idle_timeout = 0, hard_timeout = 0,
               priority = of.OFP_DEFAULT_PRIORITY):
     msg = of.ofp_flow_mod()
     msg.match = match
@@ -89,7 +90,7 @@ class Switch (EventMixin):
     msg.buffer_id = buf
     self.connection.send(msg)
 
-  def install_multiple(self, actions, match, buf = -1, idle_timeout = 0,
+  def install_multiple(self, actions, match, buf = NO_BUFFER, idle_timeout = 0,
                        hard_timeout = 0, priority = of.OFP_DEFAULT_PRIORITY):
     msg = of.ofp_flow_mod()
     msg.match = match
